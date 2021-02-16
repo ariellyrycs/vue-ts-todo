@@ -112,8 +112,8 @@ export default defineComponent({
         this.$data.numberOfNotes = res.meta.itemCount;
         this.setupAutomaticRefresh();
       } catch (e) {
-        console.error(e);
-        alert('There was an error processing the request');
+        window.console.error(e);
+        window.alert('There was an error processing the request');
       }
     },
     async addNote(value: string): Promise<void> {
@@ -133,8 +133,8 @@ export default defineComponent({
         });
         await this.getNotes();
       } catch (e) {
-        console.error(e);
-        alert('There was an error processing the request');
+        window.console.error(e);
+        window.alert('There was an error processing the request');
       }
     },
     async deleteNote(id: string): Promise<void> {
@@ -153,7 +153,7 @@ export default defineComponent({
         }
       } catch (e) {
         console.error(e);
-        alert('There was an error processing the request');
+        window.alert('There was an error processing the request');
       }
     },
     async toggleDone(note: Note, id: string): Promise<void> {
@@ -171,7 +171,7 @@ export default defineComponent({
         await this.getNotes();
       } catch (e) {
         console.error(e);
-        alert('There was an error processing the request');
+        window.alert('There was an error processing the request');
       }
     },
     async goPrevious() {

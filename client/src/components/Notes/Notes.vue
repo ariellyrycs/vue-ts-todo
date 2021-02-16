@@ -11,7 +11,7 @@
     )
       button('@click'="$emit('toggle-done', note, note._id)").circle
       .description
-        span.summary-note {{note.description | fistUpperCase}}
+        span.summary-note {{note.description | firstUpperCase}}
         span.time {{note.createdAt | elapsedTimeFormat}}
       button('@click'="$emit('delete-note', note._id)").close
 </template>
@@ -26,30 +26,10 @@ const config = {
 export default defineComponent({
   name: 'Notes',
   props: {
-    hasPrevPage: {
-      type: Boolean,
-      default: false,
-    },
-    hasNextPage: {
-      type: Boolean,
-      default: false,
-    },
     filteredNotes: {
       type: Array,
       default: () => [],
-    },
-    page: {
-      type: Number,
-      default: 0,
-    },
-    numberOfNotes: {
-      type: Number,
-      default: 0,
-    },
-    itemsPerPage: {
-      type: Number,
-      default: 4,
-    },
+    }
   },
   data() {
     return {

@@ -70,4 +70,15 @@ module.exports = {
     ],
     quotes: ['error', 'single'],
   },
+  overrides: [
+    {
+      files: [
+        "**/__tests__/*.{j,t}s",
+        "**/tests/unit/**/*.spec.{j,t}s"
+      ],
+      env: {
+        jest: true
+      }
+    }
+  ]
 };
