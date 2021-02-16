@@ -29,7 +29,7 @@ export default defineComponent({
     filteredNotes: {
       type: Array,
       default: () => [],
-    }
+    },
   },
   data() {
     return {
