@@ -7,5 +7,5 @@ export function elapsedTimeFormat(time: string) : string {
 export function fistUpperCase(str: string) : string {
   const trimStr = str.trim();
 
-  return trimStr.toUpperCase() + trimStr.slice(1);
+  return trimStr[0].toUpperCase() + trimStr.slice(1);
 }
