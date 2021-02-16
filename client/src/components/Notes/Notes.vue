@@ -72,14 +72,14 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-
+@import "../../variables.scss";
 .notes {
   box-sizing: border-box;
   margin-top: 16px;
   width: 100%;
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.17);
-  background-color: #FFF;
+  background-color: $white;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -99,9 +99,9 @@ export default defineComponent({
     > input[type="submit"] {
       width: 60px;
       border: 0;
-      background-color: #fff;
+      background-color: $white;
       font-size: 16px;
-      color: #A3A3A3;
+      color: $gray64;
     }
   }
   > ul {
@@ -149,7 +149,7 @@ export default defineComponent({
   width: 60px;
   font-weight: 100; //Couldn't find roboto 200
   font-size: 10px;
-  color: #5E5E5E;
+  color: $gray37;
   margin-left: 6px;
   margin-right: 6px;
   text-overflow: ellipsis;
@@ -169,7 +169,7 @@ export default defineComponent({
   left: 18px;
 }
 .checked {
-  color: #AEAEAE;
+  color: $silverFoil;
   .circle {
     background: url(/icons/check-mark.svg) no-repeat;
   }

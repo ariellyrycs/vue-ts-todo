@@ -73,7 +73,7 @@ export default defineComponent({
       hasNextPage: false,
       filteredNotes: [],
       searchCriteria: '',
-      refresh: null,
+      refresh: -1,
       page: 0,
       numberOfNotes: 0,
     };
@@ -87,7 +87,7 @@ export default defineComponent({
   methods: {
     clearAutomaticRefresh() {
       clearInterval(this.$data.refresh);
-      this.$data.refresh = null;
+      this.$data.refresh = -1;
     },
     setupAutomaticRefresh() {
       this.clearAutomaticRefresh();
