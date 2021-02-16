@@ -75,9 +75,9 @@ export default defineComponent({
 @import "../../variables.scss";
 .notes {
   box-sizing: border-box;
-  margin-top: 16px;
+  margin-top: 1rem;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.17);
   background-color: $white;
   overflow: hidden;
@@ -87,20 +87,20 @@ export default defineComponent({
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    padding-left: 30px;
+    padding-left: 1.875rem;
     &::placeholder {
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 400;
     }
   }
   > form {
-    height: 58px;
+    height: 3.625rem;
     display: flex;
     > input[type="submit"] {
-      width: 60px;
+      width: 3.75rem;
       border: 0;
       background-color: $white;
-      font-size: 16px;
+      font-size: 1rem;
       color: $gray64;
     }
   }
@@ -127,46 +127,46 @@ export default defineComponent({
     flex: 1;
     display: flex;
     align-items: center;
-    padding-left: 58px;
+    padding-left: 3.625rem;
     overflow: hidden;
   }
   .close {
-    width: 40px;
+    width: 2.5rem;
     height: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 }
 .summary-note {
   font-weight: 100; //Couldn't find roboto 200
-  font-size: 16px;
+  font-size: 1rem;
   text-overflow: ellipsis; //no ADA complience.
-  max-width: calc(100% - 60px);
+  max-width: calc(100% - 3.75rem);
   overflow: hidden;
   white-space: nowrap;
 }
 .time {
-  width: 60px;
+  width: 3.75rem;
   font-weight: 100; //Couldn't find roboto 200
-  font-size: 10px;
+  font-size: 0.625rem;
   color: $gray37;
-  margin-left: 6px;
-  margin-right: 6px;
+  margin-left: 0.375rem;
+  margin-right: 0.375rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 
 .circle {
-  margin-right: 8px;
-  height: 32px;
-  width: 32px;
+  margin-right: 0.4375rem;
+  height: 2rem;
+  width: 2rem;
   background: url(/icons/circle.svg) no-repeat;
   position: absolute;
   top: 0;
   bottom: 0;
   margin: auto;
-  left: 18px;
+  left: 1.125rem;
 }
 .checked {
   color: $silverFoil;

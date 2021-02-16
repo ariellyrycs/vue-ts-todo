@@ -206,7 +206,7 @@ button, input[type="submit"] {
 
 .container {
   width: 100%;
-  max-width: 588px;
-  height: 306px;
+  max-width: 36.75rem;
+  height: 19.125rem;
 }
 </style>

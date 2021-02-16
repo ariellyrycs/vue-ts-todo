@@ -19,8 +19,7 @@ export default defineComponent({
 <style lang="scss">
 //roboto 200 not found.
 @import url(https://fonts.googleapis.com/css?family=Roboto:100,200,300,400);
-@import "./variables.scss";
-body {
+:root {
   font-size: 16px;
 }
 
