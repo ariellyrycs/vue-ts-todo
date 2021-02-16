@@ -11,7 +11,7 @@
     )
       button('@click'="$emit('toggle-done', note, note._id)").circle
       .description
-        span.summary-note {{note.description}}
+        span.summary-note {{note.description | fistUpperCase}}
         span.time {{note.createdAt | elapsedTimeFormat}}
       button('@click'="$emit('delete-note', note._id)").close
 </template>
