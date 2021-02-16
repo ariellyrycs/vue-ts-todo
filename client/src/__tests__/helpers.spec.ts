@@ -3,17 +3,19 @@ import {elapsedTimeFormat, firstUpperCase} from '../helpers';
 
 
 describe('elapsedTimeFormat', () => {
-  let dateNowSpy: any;
+  let realDateNow: any;
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1487076708000);
+    realDateNow = Date.now.bind(global.Date);
+    const dateNowStub = jest.fn(() => 1613267502299);
+    global.Date.now = dateNowStub;
   });
 
   afterAll(() => {
-    dateNowSpy.mockRestore();
+    global.Date.now = realDateNow;
   });
   
   test('should display the right text', () => {
-    expect(elapsedTimeFormat('2021-02-14T01:49:42.299Z')).toBe('- 4070 minutes');
+    expect(elapsedTimeFormat('2021-02-14T01:49:42.299Z')).toBe('- 2 minutes');
   });
 });
 
