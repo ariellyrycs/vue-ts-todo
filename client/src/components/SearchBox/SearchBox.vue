@@ -1,12 +1,12 @@
 <template lang="pug">
 input(
   placeholder="Search"
-  v-model="searchCriteria"
-  @keyup="$emit('update:searchCriteria', searchCriteria);"
+  ref="searchNoteText"
+  @keyup="keyup"
 ).search-box
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'SearchBox',
@@ -14,6 +14,19 @@ export default defineComponent({
     searchCriteria: {
       type: String,
     },
+  },
+  setup(props, { emit }) {
+    const searchNoteText = ref(null);
+    const keyup = () => {
+      const $searchNoteText: HTMLInputElement = searchNoteText.value as HTMLInputElement;
+
+      emit('update-search-criteria', $searchNoteText.value);
+    };
+
+    return {
+      keyup,
+      searchNoteText,
+    };
   },
 });
 </script>

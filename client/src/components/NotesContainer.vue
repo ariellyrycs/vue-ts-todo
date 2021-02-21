@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    search-box(:searchCriteria.sync="searchCriteria")
+    search-box(@update-search-criteria="updateSearchCriteria")
     notes(
       :hasPrevPage="hasPrevPage"
       :hasNextPage="hasNextPage"
@@ -20,7 +20,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import {
+  defineComponent,
+  Ref,
+  ref,
+  onMounted,
+  watch,
+  onBeforeUnmount,
+  WatchCallback,
+} from '@vue/composition-api';
+import { debounce } from 'ts-debounce';
 
 import Notes from './Notes/Notes.vue';
 import PageNavigation from './PageNavigation/PageNavigation.vue';
@@ -46,77 +55,64 @@ interface PageInfo {
   pageCount: number,
   page: number,
   hasPrevPage: boolean,
-  hasNextPage: boolean
+  hasNextPage: boolean,
 }
 
 interface RequestInterface {
   meta: PageInfo,
-  items: Note[]
+  items: Note[],
 }
 
 export default defineComponent({
   name: 'NotesContainer',
-  async created(): Promise<void> {
-    await this.getNotes();
-  },
-  beforeDestroy() {
-    this.clearAutomaticRefresh();
-  },
   components: {
     SearchBox,
     Notes,
     PageNavigation,
   },
-  data() {
-    return {
-      hasPrevPage: false,
-      hasNextPage: false,
-      filteredNotes: [],
-      searchCriteria: '',
-      refresh: -1,
-      page: 0,
-      numberOfNotes: 0,
+  setup() {
+    const hasPrevPage: Ref<boolean> = ref<boolean>(false);
+    const hasNextPage: Ref<boolean> = ref<boolean>(false);
+    const filteredNotes: Ref<Note[]> = ref<Note[]>([]);
+    const searchCriteria: Ref<string> = ref<string>('');
+    const refresh: Ref<number> = ref<number>(-1);
+    const page: Ref<number> = ref<number>(0);
+    const numberOfNotes: Ref<number> = ref<number>(0);
+
+    const clearAutomaticRefresh = (value: number): void => {
+      window.clearInterval(value);
     };
-  },
-  watch: {
-    async searchCriteria() {
-      this.$data.page = 0;// reset pagination
-      await this.getNotes();
-    },
-  },
-  methods: {
-    clearAutomaticRefresh() {
-      clearInterval(this.$data.refresh);
-      this.$data.refresh = -1;
-    },
-    setupAutomaticRefresh() {
-      this.clearAutomaticRefresh();
-      this.$data.refresh = setInterval(() => {
-        this.$data.filteredNotes = [...this.$data.filteredNotes];
-      }, 60000);// 60000ms = 1min
-    },
-    async getNotes(): Promise<void> {
+
+    const getNotes = async (): Promise<void> => {
       try {
         const response = await fetch(`${config.SERVICE_URL}/todo/?limit=${
           config.NUMBER_OF_ITEMS_PER_PAGE
         }&offset=${
-          config.NUMBER_OF_ITEMS_PER_PAGE * this.$data.page
+          config.NUMBER_OF_ITEMS_PER_PAGE * page.value
         }&description=${
-          this.$data.searchCriteria.trim()
+          searchCriteria.value.trim()
         }`);
         const res: RequestInterface = await response.json() as RequestInterface;
 
-        this.$data.filteredNotes = res.items;
-        this.$data.hasPrevPage = res.meta.hasPrevPage;
-        this.$data.hasNextPage = res.meta.hasNextPage;
-        this.$data.numberOfNotes = res.meta.itemCount;
-        this.setupAutomaticRefresh();
+        filteredNotes.value = res.items;
+        hasPrevPage.value = res.meta.hasPrevPage;
+        hasNextPage.value = res.meta.hasNextPage;
+        numberOfNotes.value = res.meta.itemCount;
       } catch (e) {
         window.console.error(e);
         window.alert('There was an error processing the request');
       }
-    },
-    async addNote(value: string): Promise<void> {
+    };
+
+    const goPrevious = (): void => {
+      page.value = Math.max(page.value - 1, 0);
+    };
+
+    const goNext = (): void => {
+      page.value = Math.min(page.value + 1, numberOfNotes.value);
+    };
+
+    const addNote = async (value: string): Promise<void> => {
       const description = value.trim();
 
       if (description === '') return;
@@ -131,13 +127,14 @@ export default defineComponent({
             description,
           }),
         });
-        await this.getNotes();
+        await getNotes();
       } catch (e) {
         window.console.error(e);
         window.alert('There was an error processing the request');
       }
-    },
-    async deleteNote(id: string): Promise<void> {
+    };
+
+    const deleteNote = async (id: string): Promise<void> => {
       try {
         await fetch(`${config.SERVICE_URL}/todo/${id}`, {
           method: 'DELETE',
@@ -146,17 +143,18 @@ export default defineComponent({
           },
         });
         // if in the page there is only one note and gets deleted, go back to the prev page.
-        if (this.$data.filteredNotes.length === 1) {
-          await this.goPrevious();
+        if (filteredNotes.value.length === 1) {
+          goPrevious();
         } else {
-          await this.getNotes();
+          await getNotes();
         }
       } catch (e) {
         console.error(e);
         window.alert('There was an error processing the request');
       }
-    },
-    async toggleDone(note: Note, id: string): Promise<void> {
+    };
+
+    const toggleDone = async (note: Note, id: string): Promise<void> => {
       try {
         await fetch(`${config.SERVICE_URL}/todo/${id}`, {
           method: 'PUT',
@@ -168,20 +166,64 @@ export default defineComponent({
             done: !note.done,
           }),
         });
-        await this.getNotes();
+        await getNotes();
       } catch (e) {
         console.error(e);
         window.alert('There was an error processing the request');
       }
-    },
-    async goPrevious() {
-      this.$data.page = Math.max(this.$data.page - 1, 0);
-      await this.getNotes();
-    },
-    async goNext() {
-      this.$data.page = Math.min(this.$data.page + 1, this.$data.numberOfNotes);
-      await this.getNotes();
-    },
+    };
+
+    const updateSearchCriteria = (value: string) => {
+      searchCriteria.value = value;
+    };
+
+    onMounted(getNotes);
+
+    // unbind autorefresh
+    onBeforeUnmount(clearAutomaticRefresh);
+
+    watch(refresh, (newValue: number, oldValue: number): void => {
+      clearAutomaticRefresh(oldValue);
+    });
+
+    // every time the page changes will setTimeout
+    watch([page], (): void => {
+      refresh.value = window.setInterval(() => {
+        filteredNotes.value = [...filteredNotes.value];// re-render list
+      }, 60000);// 60000ms = 1min
+    }, {
+      immediate: true,
+    });
+
+    watch(page, async (): Promise<void> => {
+      await getNotes();
+    });
+
+    watch(searchCriteria, <WatchCallback> debounce(async (): Promise<void> => {
+      if (page.value === 0) {
+        await getNotes();
+      } else {
+        page.value = 0;// reset pagination
+      }
+    }, 500, {
+      maxWait: 1000,
+    }));
+
+    return {
+      hasPrevPage,
+      hasNextPage,
+      filteredNotes,
+      searchCriteria,
+      refresh,
+      page,
+      numberOfNotes,
+      deleteNote,
+      addNote,
+      goPrevious,
+      goNext,
+      toggleDone,
+      updateSearchCriteria,
+    };
   },
 });
 </script>

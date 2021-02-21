@@ -16,7 +16,7 @@
       button('@click'="$emit('delete-note', note._id)").close
 </template>
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
 const config = {
   NOTE_HEIGHT: 50,
@@ -31,8 +31,19 @@ export default defineComponent({
       default: () => [],
     },
   },
-  data() {
+  setup(props, { emit }) {
+    const newNote = ref(null);
+
+    const onSubmit = (): void => {
+      const $newNote: HTMLInputElement = newNote.value as HTMLInputElement;
+
+      emit('add-note', $newNote.value);
+      $newNote.value = '';
+    };
+
     return {
+      onSubmit,
+      newNote,
       containerStyles: {
         height: `${config.NUMBER_OF_ITEMS_PER_PAGE * config.NOTE_HEIGHT}px`,
       },
@@ -40,14 +51,6 @@ export default defineComponent({
         height: `${config.NOTE_HEIGHT}px`,
       },
     };
-  },
-  methods: {
-    onSubmit() {
-      const $newNote: HTMLInputElement = this.$refs.newNote as HTMLInputElement;
-
-      this.$emit('add-note', $newNote.value);
-      $newNote.value = '';
-    },
   },
 });
 </script>
