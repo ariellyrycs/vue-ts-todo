@@ -2,7 +2,7 @@ import type {Config} from '@jest/types';
 
 // Sync object
 const config: Config.InitialOptions = {
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
+  "setupFilesAfterEnv": ['<rootDir>/jest-setup.ts'],
   "testRegex": "(/__tests__/*|(\\.|/)spec)\\.(jsx?|tsx?)$",
   "moduleFileExtensions": [
     "js",

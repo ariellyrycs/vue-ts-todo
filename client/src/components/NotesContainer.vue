@@ -29,8 +29,8 @@ import {
   onBeforeUnmount,
   WatchCallback,
 } from '@vue/composition-api';
-import { debounce } from 'ts-debounce';
 
+import { debounce } from 'ts-debounce';
 import Notes from './Notes/Notes.vue';
 import PageNavigation from './PageNavigation/PageNavigation.vue';
 import SearchBox from './SearchBox/SearchBox.vue';
@@ -199,9 +199,9 @@ export default defineComponent({
       await getNotes();
     });
 
-    watch(searchCriteria, <WatchCallback> debounce(async (): Promise<void> => {
+    watch(searchCriteria, <WatchCallback> debounce((): Promise<void> => {
       if (page.value === 0) {
-        await getNotes();
+        return getNotes();
       } else {
         page.value = 0;// reset pagination
       }

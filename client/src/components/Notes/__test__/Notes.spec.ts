@@ -1,5 +1,9 @@
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
+import CompositionApi from '@vue/composition-api';
 import Notes from '../Notes.vue';
+
+const localVue = createLocalVue();
+localVue.use(CompositionApi);
 
 describe('Notes', () => {
   test('show load components', () => {
@@ -10,7 +14,8 @@ describe('Notes', () => {
           description: 'Today i have to go to the theater',
           createdAt: '2021-02-14T01:49:42.299Z'
         }]
-      }
+      },
+      localVue
     });
     const firstLI = wrapper.find('li:nth-of-type(1)');
     expect(firstLI.find('.summary-note').text()).toBe('Today i have to go to the theater');
@@ -24,7 +29,8 @@ describe('Notes', () => {
           description: 'Today i have to go to the theater',
           createdAt: '2021-02-14T01:49:42.299Z'
         }]
-      }
+      },
+      localVue
     });
 
     wrapper.find('input[type="text"]').setValue('search-1');
@@ -40,7 +46,8 @@ describe('Notes', () => {
     const wrapper = mount(Notes, {
       propsData: {
         filteredNotes: [note]
-      }
+      },
+      localVue
     });
     const firstLI = wrapper.find('li:nth-of-type(1)');
     firstLI.find('button:nth-of-type(1)').trigger('click');
@@ -60,7 +67,8 @@ describe('Notes', () => {
     const wrapper = mount(Notes, {
       propsData: {
         filteredNotes: [note]
-      }
+      },
+      localVue
     });
     const firstLI = wrapper.find('li:nth-of-type(1)');
     firstLI.find('button:nth-of-type(2)').trigger('click');
