@@ -11,12 +11,6 @@ const localVue = createLocalVue();
 localVue.use(CompositionApi);
 type MyFn = (...args: any[]) => any;
 
-jest.mock('ts-debounce', () => ({
-  debounce: jest.fn(() => {
-    console.log('test');
-  }),
-}));
-
 describe('NotesContainer', () => {
   let jsdomAlert: MyFn;
   beforeAll(() => {

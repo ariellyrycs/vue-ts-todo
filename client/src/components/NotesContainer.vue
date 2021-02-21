@@ -27,10 +27,8 @@ import {
   onMounted,
   watch,
   onBeforeUnmount,
-  WatchCallback,
 } from '@vue/composition-api';
 
-import { debounce } from 'ts-debounce';
 import Notes from './Notes/Notes.vue';
 import PageNavigation from './PageNavigation/PageNavigation.vue';
 import SearchBox from './SearchBox/SearchBox.vue';
@@ -62,6 +60,22 @@ interface RequestInterface {
   meta: PageInfo,
   items: Note[],
 }
+
+const debounce = (n: number, fn: (...params: any[]) => any, immed = false) => {
+  let timer: number;
+
+  return function (this: any, ...args: any[]): number {
+    if (timer === undefined && immed) {
+      fn.apply(this, args);
+    }
+
+    window.clearTimeout(timer);
+    timer = window.setTimeout((): void => {
+      fn.apply(this, args);
+    }, n);
+    return timer;
+  };
+};
 
 export default defineComponent({
   name: 'NotesContainer',
@@ -199,15 +213,15 @@ export default defineComponent({
       await getNotes();
     });
 
-    watch(searchCriteria, <WatchCallback> debounce((): Promise<void> => {
+    const searchCriteriaDebounce = debounce(500, async (): Promise<void> => {
       if (page.value === 0) {
-        return getNotes();
-      } else {
-        page.value = 0;// reset pagination
+        await getNotes();
       }
-    }, 500, {
-      maxWait: 1000,
-    }));
+
+      page.value = 0;// reset pagination
+    }, true);
+
+    watch(searchCriteria, searchCriteriaDebounce);
 
     return {
       hasPrevPage,
