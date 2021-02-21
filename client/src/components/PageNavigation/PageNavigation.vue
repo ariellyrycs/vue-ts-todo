@@ -1,9 +1,9 @@
 <template lang="pug">
 .record-nav
-  button(@click="$emit('go-previous')" :disabled="!hasPrevPage" )
+  button(@click="goPrevious" :disabled="!hasPrevPage" )
     img(src="/icons/arrow-left.svg")
   span
-  button(@click="$emit('go-next')" :disabled="!hasNextPage" )
+  button(@click="goNext" :disabled="!hasNextPage" )
     img(src="/icons/arrow-right.svg")
 </template>
 <script lang="ts">
@@ -20,6 +20,16 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  setup(props, { emit }) {
+    const goNext = (): void => emit('go-next');
+
+    const goPrevious = (): void => emit('go-previous');
+
+    return {
+      goNext,
+      goPrevious,
+    };
   },
 });
 </script>
