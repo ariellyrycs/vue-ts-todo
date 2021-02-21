@@ -1,9 +1,9 @@
 <template lang="pug">
-.record-nav
-  button(@click="goPrevious" :disabled="!hasPrevPage" )
+.record-nav--full
+  button(@click="goPrevious" :disabled="!hasPrevPage").record-nav__button--prev
     img(src="/icons/arrow-left.svg")
-  span
-  button(@click="goNext" :disabled="!hasNextPage" )
+  span.record-nav--divider
+  button(@click="goNext" :disabled="!hasNextPage").record-nav__button--next
     img(src="/icons/arrow-right.svg")
 </template>
 <script lang="ts">
@@ -34,7 +34,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-.record-nav {
+.record-nav--full {
   margin-left: auto;
   margin-top: 16px;
   width: 69px;
@@ -46,22 +46,24 @@ export default defineComponent({
   box-sizing: border-box;
   background-color: #fff;
   align-items: center;
-  > span {
-    display: block;
-    height: 19px;
-    width: 1px;
-    background-color: #A8A8A8;
+}
+
+.record-nav__button--prev, .record-nav__button--next {
+  background-color: #fff;
+  height: 100%;
+  flex: 1;
+  &:hover {
+    background-color: #ddd;
   }
-  > button {
-    background-color: #fff;
-    height: 100%;
-    flex: 1;
-    &:hover {
-      background-color: #ddd;
-    }
-    &:disabled {
-      background-color: #eee;
-    }
+  &:disabled {
+    background-color: #eee;
   }
+}
+
+.record-nav--divider {
+  display: block;
+  height: 19px;
+  width: 1px;
+  background-color: #A8A8A8;
 }
 </style>

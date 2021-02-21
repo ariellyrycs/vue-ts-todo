@@ -3,7 +3,7 @@ input(
   placeholder="Search"
   ref="searchNoteText"
   @keyup="keyup"
-).search-box
+).search-box__field
 </template>
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
@@ -32,7 +32,7 @@ export default defineComponent({
 </script>
 <style lang="scss">
 @import "../../variables.scss";
-.search-box {
+.search-box__field {
   box-sizing: border-box;
   width: 100%;
   height: 2rem;

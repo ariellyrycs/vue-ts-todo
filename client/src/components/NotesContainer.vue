@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container
+  .notes-container
     search-box(@update-search-criteria="updateSearchCriteria")
     notes(
       :hasPrevPage="hasPrevPage"
@@ -254,13 +254,8 @@ button, input[type="submit"] {
     cursor: pointer;
   }
 }
-.unstyled {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
 
-.container {
+.notes-container {
   width: 100%;
   max-width: 36.75rem;
   height: 19.125rem;

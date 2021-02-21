@@ -1,19 +1,19 @@
 <template lang="pug">
 .notes
-  form(name="record-form" "@submit.prevent"="onSubmit")
-    input(type="text" ref="newNote" placeholder="Take a note").new-ask-field
-    input(type="submit" value="").plus-sign
-  ul(v-bind:style="[containerStyles]").unstyled
-    li.record(
+  form(name="record-form" "@submit.prevent"="onSubmit").add-note--full
+    input(type="text" ref="newNote" placeholder="Take a note").add-note__field
+    input(type="submit" value="").add-note__button
+  ul(v-bind:style="[containerStyles]").notes__list
+    li(
       "v-for"="note in filteredNotes"
       :key="note._id"
-      :style="[noteStyles]" :class="{'checked': note.done}"
-    )
-      button('@click'="$emit('toggle-done', note, note._id)").circle
-      .description
-        span.summary-note {{note.description | firstUpperCase}}
-        span.time {{note.createdAt | elapsedTimeFormat}}
-      button('@click'="$emit('delete-note', note._id)").close
+      :style="[noteStyles]" :class="{'notes__list-item--checked': note.done}"
+    ).notes__list-item
+      button('@click'="$emit('toggle-done', note, note._id)").notes__circle-button--done
+      .description--full
+        span.description__message-label {{note.description | firstUpperCase}}
+        span.description__time-label {{note.createdAt | elapsedTimeFormat}}
+      button('@click'="$emit('delete-note', note._id)").notes__button--close
 </template>
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
@@ -66,45 +66,57 @@ export default defineComponent({
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  .new-ask-field {
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 1.875rem;
-    &::placeholder {
-      font-size: 1rem;
-      font-weight: 400;
-    }
-  }
-  > form {
-    height: 3.625rem;
-    display: flex;
-    > input[type="submit"] {
-      width: 3.75rem;
-      border: 0;
-      background-color: $white;
-      font-size: 1rem;
-      color: $gray64;
-    }
-  }
-  > ul {
-    overflow-y: scroll;
+}
+
+.add-note--full {
+  height: 3.625rem;
+  display: flex;
+}
+
+.add-note__field {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 1.875rem;
+  &::placeholder {
+    font-size: 1rem;
+    font-weight: 400;
   }
 }
-.record {
+
+.add-note__button {
+  width: 3.75rem;
+  border: 0;
+  background-color: $white;
+  font-size: 1rem;
+  color: $gray64;
+  background: url(/icons/plus.svg) no-repeat;
+  background-position: center;
+}
+
+.notes__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.notes__button--close {
+  display: none;
+  background: url(/icons/cross.svg) no-repeat;
+  background-position: center;
+}
+
+.notes__list-item {
   border-top: 1px solid rgba(0, 0, 0, 0.17);
   flex: 1;
   display: flex;
   align-items: center;
   position: relative;
   box-sizing: border-box;
-  .close {
-    display: none;
-  }
-  &:hover .close {
+
+  &:hover .notes__button--close {
     display: block;
   }
-  .description {
+  .description--full {
     box-sizing: border-box;
     height: 100%;
     flex: 1;
@@ -113,14 +125,15 @@ export default defineComponent({
     padding-left: 3.625rem;
     overflow: hidden;
   }
-  .close {
+  .notes__button--close {
     width: 2.5rem;
     height: 100%;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
 }
-.summary-note {
+
+.description__message-label {
   font-weight: 100; //Couldn't find roboto 200
   font-size: 1rem;
   text-overflow: ellipsis; //no ADA complience.
@@ -128,7 +141,8 @@ export default defineComponent({
   overflow: hidden;
   white-space: nowrap;
 }
-.time {
+
+.description__time-label {
   width: 3.75rem;
   font-weight: 100; //Couldn't find roboto 200
   font-size: 0.625rem;
@@ -140,7 +154,7 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.circle {
+.notes__circle-button--done {
   margin-right: 0.4375rem;
   height: 2rem;
   width: 2rem;
@@ -151,21 +165,14 @@ export default defineComponent({
   margin: auto;
   left: 1.125rem;
 }
-.checked {
+
+.notes__list-item--checked {
   color: $silverFoil;
-  .circle {
+  .notes__circle-button--done {
     background: url(/icons/check-mark.svg) no-repeat;
   }
-  .summary-note {
+  .description__message-label {
     text-decoration: line-through;
   }
-}
-.plus-sign {
-  background: url(/icons/plus.svg) no-repeat;
-  background-position: center;
-}
-.close {
-  background: url(/icons/cross.svg) no-repeat;
-  background-position: center;
 }
 </style>
